@@ -1,5 +1,10 @@
 source 'https://rubygems.org'
 
+# Using devise for user authentication
+gem 'devise'
+
+# Downgrade coffee script source gem to be working in Windows
+gem 'coffee-script-source', '1.8.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.6'
