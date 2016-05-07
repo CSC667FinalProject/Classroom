@@ -1,0 +1,17 @@
+<nav class="navbar navbar-default" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<% if user_signed_in? %>
+
+				<div class="pull-right">
+					<a class="navbar-brand">Signed in as <%= current_user.email %></a>
+
+					<%= link_to "Sign Out",destroy_user_session_path, :method => :delete, :class => "navbar-brand" %>
+				</div>
+			<% else %>
+				<a class="navbar-brand" href="<%= new_user_session_path %>">Sign In</a>
+				<a class="navbar-brand" href="<%= new_user_registration_path %>">Sign Up </a>
+			<% end %>
+		</div>
+	</div>
+</nav>
