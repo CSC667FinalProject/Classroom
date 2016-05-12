@@ -63,11 +63,15 @@ GEM
     execjs (2.6.0)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
+<<<<<<< HEAD
     gon (6.0.1)
       actionpack (>= 3.0)
       json
       multi_json
       request_store (>= 1.0)
+=======
+    httpclient (2.8.0)
+>>>>>>> 07cc18e0bf2899d003e66a8da08d63c251a93b20
     i18n (0.7.0)
     jbuilder (2.4.1)
       activesupport (>= 3.0.0, < 5.1)
@@ -91,6 +95,15 @@ GEM
       mini_portile2 (~> 2.0.0.rc2)
     orm_adapter (0.5.0)
     pg (0.18.4)
+<<<<<<< HEAD
+=======
+    pg (0.18.4-x86-mingw32)
+    pusher (0.17.0)
+      httpclient (~> 2.7)
+      multi_json (~> 1.0)
+      pusher-signature (~> 0.1.8)
+    pusher-signature (0.1.8)
+>>>>>>> 07cc18e0bf2899d003e66a8da08d63c251a93b20
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -165,6 +178,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   pg
+  pusher
   rails (= 4.2.6)
   sdoc (~> 0.4.0)
   sqlite3

@@ -5,8 +5,27 @@
 	  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
 	  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
 	  <%= csrf_meta_tags %>
+<<<<<<< HEAD
 	  <%= include_gon %>
 	  <%= yield(:head) %>
+=======
+
+	  <!-- Pusher stuff -->
+	  <script src="https://js.pusher.com/3.1/pusher.min.js"></script>
+	  <script>
+
+	    Pusher.logToConsole = true;
+
+	    var pusher = new Pusher('db5516d4f7a81e681d0f', {
+	      encrypted: true
+	    });
+
+	    var channel = pusher.subscribe('test_channel');
+	    channel.bind('my_event', function(data) {
+	      alert(data.message);
+	    });
+	  </script>
+>>>>>>> 07cc18e0bf2899d003e66a8da08d63c251a93b20
 	</head>
 	
 	<body>
