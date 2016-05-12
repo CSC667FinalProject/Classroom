@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  post 'pusher/chat'
+
+  post 'pusher/hello_world'
+
   get 'home/index'
 
   devise_for :users
