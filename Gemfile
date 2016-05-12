@@ -61,8 +61,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'bootstrap-sass', '~>3.2.0'
 
-<<<<<<< HEAD
+
 gem 'gon'
-=======
+
 gem 'pusher'
->>>>>>> 07cc18e0bf2899d003e66a8da08d63c251a93b20
+
