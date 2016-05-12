@@ -1,4 +1,4 @@
-function sendGame(){
+function printGame(){
   console.log(gon.current_game);
 }
-sendGame();
+printGame();
