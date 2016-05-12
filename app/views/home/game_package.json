@@ -1,0 +1,42 @@
+game_package = {
+    "current_game":[{
+      "players" : [
+        {
+          "user_name":"auser",
+          "is_active": false,
+          "is_attacker": false,
+          "move_1":[{"x":123.5, "y":77.3}],
+          "move_2":[{"x":123.5, "y":77.3}],
+          "move_3":[{"x":123.5, "y":77.3}],
+          "is_current_player":true
+        },
+        {
+          "user_name":"auser",
+          "is_active": false,
+          "is_attacker": false,
+          "move_1":[{"x":123.5, "y":77.3}],
+          "move_2":[{"x":123.5, "y":77.3}],
+          "move_3":[{"x":123.5, "y":77.3}],
+          "is_current_player":false
+        },
+        {
+          "user_name":"auser",
+          "is_active": false,
+          "is_attacker": false,
+          "move_1":[{"x":123.5, "y":77.3}],
+          "move_2":[{"x":123.5, "y":77.3}],
+          "move_3":[{"x":123.5, "y":77.3}],
+          "is_current_player":false
+        },
+        {
+          "user_name":"auser",
+          "is_active": false,
+          "is_attacker": false,
+          "move_1":[{"x":123.5, "y":77.3}],
+          "move_2":[{"x":123.5, "y":77.3}],
+          "move_3":[{"x":123.5, "y":77.3}],
+          "is_current_player":false
+        }
+      ]
+    }]
+}

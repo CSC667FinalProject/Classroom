@@ -1,5 +1,10 @@
 <img class="img-responsive" src="http://d2art.com/wp-content/uploads/2013/10/placeholder_image1.png">
-
+<head>
+<%= csrf_meta_tags %>
+<% content_for(:head) do %>
+  <%= javascript_include_tag 'test' %>
+<% end %>
+</head>
 <!--
 <div>
 	<% if user_signed_in? %>
