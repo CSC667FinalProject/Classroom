@@ -1,115 +1,83 @@
-<head>
-<%= csrf_meta_tags %>
-<% content_for(:head) do %>
-  <%= javascript_include_tag 'test' %>
-<% end %>
-</head>
+<img class="img-responsive" src="http://d2art.com/wp-content/uploads/2013/10/placeholder_image1.png">
 
+<!--
 <div>
 	<% if user_signed_in? %>
-<!-- 		Signed in as <%= current_user.email %>
-		<%= link_to "Sign Out", destroy_user_session_path, :method => :delete %> -->
+		Signed in as <%= current_user.email %>
+		<%= link_to "Sign Out", destroy_user_session_path, :method => :delete %>
 	<% else %>
 		<%= link_to "Sign Up", new_user_registration_path %>
 		<%= link_to "Sign In", new_user_session_path %>
 	<% end %>
 </div>
-<img class="img-responsive" src="http://d2art.com/wp-content/uploads/2013/10/placeholder_image1.png">
+-->
 
-<p>chat here</p>
 </br>
 
 <div class="panel panel-primary">
 	<div class="panel-heading"><b>Server Chat</b></div>
-	<div class="panel-body fixed-panel">
-		
-        <div class="chat-body">
-            <div class="header">
-                <strong class="primary-font">Jack Sparrow</strong>
-            </div>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                dolor, quis ullamcorper ligula sodales.
-            </p>
-        </div>
+	<div id="chat" class="panel-body fixed-panel">
 
-        <div class="chat-body">
-            <div class="header">
-                <strong class="primary-font">Jack Sparrow</strong>
-            </div>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                dolor, quis ullamcorper ligula sodales.
-            </p>
-        </div>
-
-        <div class="chat-body">
-            <div class="header">
-                <strong class="primary-font">Jack Sparrow</strong>
-            </div>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                dolor, quis ullamcorper ligula sodales.
-            </p>
-        </div>
-
-        <div class="chat-body">
-            <div class="header">
-                <strong class="primary-font">Jack Sparrow</strong>
-            </div>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                dolor, quis ullamcorper ligula sodales.
-            </p>
-        </div>
-        <div class="chat-body">
-            <div class="header">
-                <strong class="primary-font">Jack Sparrow</strong>
-            </div>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                dolor, quis ullamcorper ligula sodales.
-            </p>
-        </div>
-        <div class="chat-body">
-            <div class="header">
-                <strong class="primary-font">Jack Sparrow</strong>
-            </div>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                dolor, quis ullamcorper ligula sodales.
-            </p>
-        </div>
-        <div class="chat-body">
-            <div class="header">
-                <strong class="primary-font">Jack Sparrow</strong>
-            </div>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                dolor, quis ullamcorper ligula sodales.
-            </p>
-        </div>
-        <div class="chat-body">
-            <div class="header">
-                <strong class="primary-font">Jack Sparrow</strong>
-            </div>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                dolor, quis ullamcorper ligula sodales.
-            </p>
-        </div>
-		
 	</div>
 
 	<div class="panel-footer">
 		<div class="input-group">
-			<input class="form-control" id="message" placeholder="Enter your message">
+			<input id="message_box" class="form-control"  placeholder="Enter your message">
 
 			<span class="input-group-btn">
-				<button class="btn btn-primary">Send</button>
+				<button id="send_button" class="btn btn-primary" onclick="sendMessage()">Send</button>
 			</span>	
 		</div>
 	</div>
 </div>
 
-<%= button_to "test Pusher", {:controller => :pusher, :action => :hello_world}, :method => :post %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<script src="https://js.pusher.com/3.1/pusher.min.js"></script>
+
+<script>
+      
+
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('db5516d4f7a81e681d0f', {
+        encrypted: true
+    });
+
+    var channel = pusher.subscribe('chat');
+
+    channel.bind('sendMessage', function(data) {
+        //alert(data.message);
+        $('#chat').append('<div class="chat-body"><div class="header"><strong class="primary-font">' + data.user_email + '</strong></div><p>' + data.message + '</p></div>');
+    });
+
+
+    function sendMessage() {
+        var message = document.getElementById("message_box").value;
+        console.log("<%= pusher_chat_path %>");
+        console.log("<%= current_user.email %>");
+        console.log(message);
+
+        var payload = {
+            user_email: "<%= current_user.email %>",
+            message: message
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "<%= pusher_chat_path %>",
+            data: payload,
+            success: clearMessageBox()
+        });
+    }
+
+    function clearMessageBox() {
+        document.getElementById("message_box").value = "";
+    }
+
+    $("#message_box").keyup(function(event){
+        if(event.keyCode == 13){
+            $("#send_button").click();
+        }
+    });
+</script>
