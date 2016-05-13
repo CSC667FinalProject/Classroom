@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   post 'pusher/hello_world'
 
   get 'home/index'
+  match '/lobby', to: 'home#lobby', :via => :get
   match ':controller(/:action(/:id))', :via => :get
   devise_for :users
   devise_scope :user do

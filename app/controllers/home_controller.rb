@@ -1,5 +1,9 @@
 class HomeController < ApplicationController
   def index
-    gon.current_game = "Here's a game"
+  end
+  def send_moves
+  end
+  def lobby
+    render :lobby
   end
 end

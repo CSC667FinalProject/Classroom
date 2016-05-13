@@ -1,26 +1,20 @@
+
 <nav class="navbar navbar-default" role="navigation">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-xs-12">
-				<div class="navbar-header">
-				</div>
-
-				<ul class="nav navbar-nav"> 
-					
-					<li><%#= link_to "Home", home_index_path %></li>
-				</ul>
-
-				<ul class="nav narbar-nav navbar-right">
-
-					<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown">My Account</a>
-					</li>
-					<li><%#= link_to "Signed in as #{current_user.email}", edit_user_registration_path, :class => "navbar-brand" %></li>
-
-					<li><%#= link_to "Sign Out",destroy_user_session_path, :method => :delete, :class => "navbar-brand" %></li>
-						
-				</ul>
-			</div>
-		</div>
-	</div>
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>    
+    <a class="navbar-brand" href="#">Knife 'em!</a>
+  </div>
+  <div class="navbar-collapse collapse">
+    <ul class="nav navbar-nav navbar-left">
+        <li><%= link_to "Home", home_index_path, :class => "navbar-brand"%></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><%= link_to "Signed in as #{current_user.email}", edit_user_registration_path, :class => "navbar-brand" %></li>
+      <li><%= link_to "Sign Out",destroy_user_session_path, :method => :delete, :class => "navbar-brand" %></li>
+    </ul>
+  </div>
 </nav>
