@@ -1,17 +1,5 @@
 <img class="img-responsive" src="http://d2art.com/wp-content/uploads/2013/10/placeholder_image1.png">
 
-<!--
-<div>
-	<% if user_signed_in? %>
-		Signed in as <%= current_user.email %>
-		<%= link_to "Sign Out", destroy_user_session_path, :method => :delete %>
-	<% else %>
-		<%= link_to "Sign Up", new_user_registration_path %>
-		<%= link_to "Sign In", new_user_session_path %>
-	<% end %>
-</div>
--->
-
 </br>
 
 <div class="panel panel-primary">
@@ -47,7 +35,6 @@
     channel.bind('sendMessage', function(data) {
         $('#chat').append('<div class="chat-body"><div class="header"><strong class="primary-font">' + data.user_email + '</strong></div><p>' + data.message + '</p></div>');
 
-        //clearMessageBox();
         scrollToBottom();
     });
 
@@ -67,10 +54,12 @@
         });
     }
 
+    // remove old text in message box
     function clearMessageBox() {
         document.getElementById("message_box").value = "";
     }
 
+    // scroll to last message when received new message 
     function scrollToBottom() {
         var chat = document.getElementById("chat");
         chat.scrollTop = chat.scrollHeight;
