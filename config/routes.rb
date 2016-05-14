@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   post 'pusher/hello_world'
 
   get 'home/index'
-  match '/lobby', to: 'home#lobby', :via => :get
+  post 'lobby/player_join'
   match ':controller(/:action(/:id))', :via => :get
   devise_for :users
   devise_scope :user do
@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     unauthenticated do
       root 'devise/sessions#new', as: :unauthenticated_root
     end
-  end  
+  end
   
 
 

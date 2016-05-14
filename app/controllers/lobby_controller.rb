@@ -1,4 +1,4 @@
-class HomeController < ApplicationController
+class LobbyController < ApplicationController
   def index
     if current_user
         @open_games=Game.where(:waiting_for_players => true)
@@ -10,14 +10,14 @@ class HomeController < ApplicationController
           game.save
           @open_games=Game.where(:waiting_for_players => true)
         end
-        redirect_to "/lobby/"
     else
-      redirect_to "/"
+      redirect_to "/home/"
     end
   end
   def player_join
     if current_user
-      @game = Game.where(:id => :params[:id])
+      @game = Game.where(:id => params['id'])
+      redirect_to "/game#start"
     else
       redirect_to "/home"
     end

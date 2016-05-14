@@ -11,15 +11,15 @@
   <p align="center">Join an open game below and get start throwing knives!</p>
 </div>
 
-<% (1..3).each do |i| %>
+<% @open_games.each do |game| %>
 <div class="panel panel-primary">
-  <div class="panel-heading"><b>Game Number: </b></div>
+  <div class="panel-heading"><b>Game Number: <%=game.id%></b></div>
   <div class="panel-body fixed-panel">
     
         <div class="row">
             <div class="col-md-6">
               <div class="btn-group">
-                <button class="btn btn-primary btn-sm">Join Game</button>
+                <%= button_to('Join', {:controller => :lobby, :action => 'player_join'}, params: {:id=>game.id}, :class => 'btn btn-large btn-primary')%>
               </div>
             </div>
         </div> 

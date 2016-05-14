@@ -1,0 +1,70 @@
+<img class="img-responsive" src="http://d2art.com/wp-content/uploads/2013/10/placeholder_image1.png">
+
+</br>
+
+<div class="panel panel-primary">
+  <div class="panel-heading"><b>Server Chat</b></div>
+  <div id="chat" class="panel-body fixed-panel"></div>
+  <div class="panel-footer">
+    <div class="input-group">
+      <input id="message_box" class="form-control"  placeholder="Enter your message">
+      <span class="input-group-btn">
+        <button id="send_button" class="btn btn-primary" onclick="sendMessage()">Send</button>
+      </span> 
+    </div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<script src="https://js.pusher.com/3.1/pusher.min.js"></script>
+
+<script>
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('db5516d4f7a81e681d0f', {
+        encrypted: true
+    });
+
+    var channel = pusher.subscribe('chat');
+
+    channel.bind('sendMessage', function(data) {
+        $('#chat').append('<div class="chat-body"><div class="header"><strong class="primary-font">' + data.user_email + '</strong></div><p>' + data.message + '</p></div>');
+
+        scrollToBottom();
+    });
+
+    function sendMessage() {
+        var message = document.getElementById("message_box").value;
+
+        var payload = {
+            user_email: "<%= current_user.email %>",
+            message: message
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "<%= pusher_chat_path %>",
+            data: payload,
+            success: clearMessageBox()
+        });
+    }
+
+    // remove old text in message box
+    function clearMessageBox() {
+        document.getElementById("message_box").value = "";
+    }
+
+    // scroll to last message when received new message 
+    function scrollToBottom() {
+        var chat = document.getElementById("chat");
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    // trigger button click when user hits Enter key
+    $("#message_box").keyup(function(event){
+        if (event.keyCode == 13){
+            $("#send_button").click();
+        }
+    });
+</script>

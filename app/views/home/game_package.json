@@ -40,3 +40,58 @@ game_package = {
       ]
     }]
 }
+
+
+game_package = {
+    "current_game":[{
+      "players" : [
+        {
+          "user_name":"auser",
+          "user_id": 1234,
+          "is_active": false,
+          "status": "attacker",
+          "player_number": 1,
+          "player_position":[{"x":123.5, "y":77.3}],
+          "action_1":[{"x":123.5, "y":77.3}],
+          "action_2":[{"x":123.5, "y":77.3}],
+          "action_3":[{"x":123.5, "y":77.3}],
+        },
+        {
+          "user_name":"auser",
+          "user_id": 1234,
+          "is_active": false,
+          "status": "dead",
+          
+          "player_number": 2,
+          "player_position":[{"x":123.5, "y":77.3}],
+          "action_1":[{"x":123.5, "y":77.3}],
+          "action_2":[{"x":123.5, "y":77.3}],
+          "action_3":[{"x":123.5, "y":77.3}]
+        },
+        {
+          "user_name":"auser",
+          "user_id": 1234,
+          "is_active": false,
+          "status": "defender",
+          
+          "player_number": 3,
+          "player_position":[{"x":123.5, "y":77.3}],
+          "action_1":[{"x":123.5, "y":77.3}],
+          "action_2":[{"x":123.5, "y":77.3}],
+          "action_3":[{"x":123.5, "y":77.3}]
+        },
+        {
+          "user_name":"auser",
+          "user_id": 1234,
+          "is_active": false,
+          "status": "defender",
+          
+          "player_number": 4,
+          "player_position":[{"x":123.5, "y":77.3}],
+          "action_1":[{"x":123.5, "y":77.3}],
+          "action_2":[{"x":123.5, "y":77.3}],
+          "action_3":[{"x":123.5, "y":77.3}]
+        }
+      ]
+    }]
+}
