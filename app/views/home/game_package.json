@@ -48,8 +48,8 @@ game_package = {
         {
           "user_name":"auser",
           "user_id": 1234,
-          "is_active": false,
-          "status": "attacker",
+          "is_attacker": false,
+          "is_alive": "attacker",
           "player_number": 1,
           "player_position":[{"x":123.5, "y":77.3}],
           "action_1":[{"x":123.5, "y":77.3}],

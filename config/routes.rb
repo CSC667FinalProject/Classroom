@@ -1,11 +1,9 @@
 Rails.application.routes.draw do
+  match ':controller(/:action(/:id))', :via => [:get, :post]
+  match "/game/player_join" => "game#player_join", :via => :post
   post 'pusher/chat'
-
-  post 'pusher/hello_world'
-
+  post 'pusher/player_joined'
   get 'home/index'
-  post 'lobby/player_join'
-  match ':controller(/:action(/:id))', :via => :get
   devise_for :users
   devise_scope :user do
     authenticated :user do

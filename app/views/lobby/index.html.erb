@@ -11,30 +11,24 @@
   <p align="center">Join an open game below and get start throwing knives!</p>
 </div>
 
-<% @open_games.each do |game| %>
-<div class="panel panel-primary">
-  <div class="panel-heading"><b>Game Number: <%=game.id%></b></div>
-  <div class="panel-body fixed-panel">
-    
-        <div class="row">
-            <div class="col-md-6">
-              <div class="btn-group">
-                <%= button_to('Join', {:controller => :lobby, :action => 'player_join'}, params: {:id=>game.id}, :class => 'btn btn-large btn-primary')%>
+<% @games.each do |game_id, players| %> 
+  <div class="panel panel-primary">
+    <div class="panel-heading"><b>Game Number: <%=game_id%></b></div>
+    <div class="panel-body fixed-panel">
+      
+          <div class="row">
+              <div class="col-md-6">
+                <div class="btn-group">
+                  <%= button_to('Join', {:controller => :game, :action => 'player_join'}, params: {:id=>game_id}, :class => 'btn btn-large btn-primary')%>
+                </div>
               </div>
+          </div>
+          <% players.each do |player_id, email| %> 
+            <div class="row" align="center">
+                <div class="col-md-4"><p>Player <%=player_id%></p></div><div class="col-md-2"><%=email%></div>
             </div>
-        </div> 
-        <div class="row" align="center">
-            <div class="col-md-4">Seat 1:</div><div class="col-md-2">Name</div>
-        </div> 
-        <div class="row" align="center">
-            <div class="col-md-4">Seat 2:</div><div class="col-md-2">Name</div>
-        </div>
-        <div class="row" align="center">
-            <div class="col-md-4">Seat 3:</div><div class="col-md-2">OPEN</div>
-        </div>
-        <div class="row" align="center">
-            <div class="col-md-4">Seat 4:</div><div class="col-md-2">OPEN</div>
-        </div>
+          <% end %>
+    </div>
   </div>
-</div>
 <% end %>
+

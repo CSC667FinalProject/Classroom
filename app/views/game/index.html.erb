@@ -1,3 +1,5 @@
+
+<h4 align="center">Game <%=@game.id%></h1>
 <img class="img-responsive" src="http://d2art.com/wp-content/uploads/2013/10/placeholder_image1.png">
 
 </br>
@@ -21,18 +23,81 @@
 
 <script>
     Pusher.logToConsole = true;
-
     var pusher = new Pusher('db5516d4f7a81e681d0f', {
         encrypted: true
     });
 
-    var channel = pusher.subscribe('chat');
+    var chat_channel = pusher.subscribe('chat');
+    var game_channel = pusher.subscribe('<%=@game.id%>')
 
-    channel.bind('sendMessage', function(data) {
+    chat_channel.bind('sendMessage', function(data) {
         $('#chat').append('<div class="chat-body"><div class="header"><strong class="primary-font">' + data.user_email + '</strong></div><p>' + data.message + '</p></div>');
 
         scrollToBottom();
     });
+
+    game_channel.bind('newPlayerJoined', function(data){
+        console.log(data['user_email']+" has joined the game!");
+        //TODO add message to chat to display that new player joined
+    });
+
+    game_channel.bind('promptForMoves', function(data){
+        // data=setCurrentPlayer(data);
+        // data=getMoves(data);
+        // sendMoves(data);
+        console.log(data)
+    });
+
+    game_channel.bind('allMovesEntered', function(data){
+        data=setCurrentPlayer(data);
+        results=animate_game(data);
+        sendResults();
+    });
+
+    game_channel.bind('gameComplete', function(data){
+        window.location.replace('/game/game_results/<%=@game.id%>');
+    });
+
+
+
+    initialJoin();
+
+    function getMoves(game_package){
+        //TODO get moves from Eduard
+
+    }
+
+    function sendMoves(){
+        //TODO send moves from Eduard
+    }
+
+    function animateGame(game_package){
+        results = [];
+        //TODO call Eduard's animate game function (game_package)
+        //TODO get results from the game animating
+        //TODO send results to server
+        return results;
+    }
+
+    function sendResults(results){
+
+    }
+
+    function setCurrentPlayer(game_package){
+        //TODO for player whose id matches current_user.id set isPlayer to true
+        return game_package;
+    }
+
+    function initialJoin(){
+        $.ajax({
+        type: "POST",
+        data: { id: <%=@game.id%>},
+        url: "<%= pusher_player_joined_path%>",
+        success: function(){
+            console.log('You have joined the club!')
+            }
+        });
+    }
 
     function sendMessage() {
         var message = document.getElementById("message_box").value;
@@ -60,11 +125,12 @@
         var chat = document.getElementById("chat");
         chat.scrollTop = chat.scrollHeight;
     }
-
-    // trigger button click when user hits Enter key
-    $("#message_box").keyup(function(event){
-        if (event.keyCode == 13){
-            $("#send_button").click();
-        }
+    $( document ).ready(function() {
+        // trigger button click when user hits Enter key
+        $("#message_box").keyup(function(event){
+            if (event.keyCode == 13){
+                $("#send_button").click();
+            }
+        });
     });
 </script>
