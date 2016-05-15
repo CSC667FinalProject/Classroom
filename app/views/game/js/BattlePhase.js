@@ -6,9 +6,9 @@ var game_package;
 var player_data = [
 	{	
 	//player 1
-		user_name: "a",
-		is_attacker: false,
-		is_alive: true,
+		user_name: "a",				//game_package.current_game[0].players[0].user_name;	
+		is_attacker: false,			//game_package.current_game[0].players[0].is_attacker;
+		is_alive: true,				//game_package.current_game[0].players[0].is_alive;
 		player_positionX: 100,
 		player_positionY: 100,
 		actionX_1: 400,
@@ -333,14 +333,14 @@ function updateCounter() {
 		}
 		*/
 		
-		/*
+		
 		//checks who current user is and sends client data to server
 		for (var index = 0; index < 4; index++){
 			if (player_data[index].is_current_user) {
-				//getPlayerMoves(player_data[index]);
+				getPlayerMoves(player_data[index]);
 			}
 		}
-		*/
+		
 	}
 
 }
@@ -368,9 +368,10 @@ function collisionHandler(player_data, player, projectile) {
 		
 }
 
-/*
+
 function getPlayerMoves(player_data) {
 	//Get user input
+	/*
 	var hash = {
 		user_name: player_data.user_name,
 		is_attacker: player_data.is_attacker,
@@ -385,9 +386,10 @@ function getPlayerMoves(player_data) {
 		actionY_3: player_data.actionY_3,
 		is_current_user: player_data.is_current_user
 	}
-	$.post('controller/action', hash)
+	*/
+	$.post('controller/action', player_data)
 }
-*/
+
 /*
 function animateGame() {
 	$.get('controller/action', function(event) {

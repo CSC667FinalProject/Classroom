@@ -4,9 +4,9 @@ var game_package;
 
 //player data
 var player1_data = {
-	user_name: "a",
-	is_attacker: false,
-	is_alive: true,
+	user_name: "a",					//game_package.current_game[0].players[0].user_name;
+	is_attacker: false,				//game_package.current_game[0].players[0].is_attacker;
+	is_alive: true,					//game_package.current_game[0].players[0].is_alive;
 	player_positionX: 50,
 	player_positionY: 50,
 	actionX_1: 0,
@@ -163,25 +163,25 @@ function onTapHandler() {
 			if (player1_data.is_current_user == true) {
 				
 				console.log(player1_data);
-				//getPlayerMoves(player1_data);
+				getPlayerMoves(player1_data);
 			
 			}
 			else if (player2_data.is_current_user == true){
 			
 				console.log(player2_data);
-				//getPlayerMoves(player2_data);
+				getPlayerMoves(player2_data);
 			
 			}
 			else if (player3_data.is_current_user == true){
 			
 				console.log(player3_data);
-				//getPlayerMoves(player3_data);
+				getPlayerMoves(player3_data);
 			
 			}
 			else if (player4_data.is_current_user == true){
 			
 				console.log(player4_data);
-				//getPlayerMoves(player4_data);
+				getPlayerMoves(player4_data);
 				
 			}
 
@@ -212,7 +212,7 @@ function animateGame() {
 }
 */
 
-/*
+
 //send data to server
 //update player inputs
 function getPlayerMoves(player_data) {
@@ -233,4 +233,3 @@ function getPlayerMoves(player_data) {
 	}
 	$.post('controller/action', hash)
 }
-*/
