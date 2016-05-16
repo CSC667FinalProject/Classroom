@@ -1,8 +1,76 @@
 
-<h4 align="center">Game <%=@game.id%></h1>
-<img class="img-responsive" src="http://d2art.com/wp-content/uploads/2013/10/placeholder_image1.png">
+<head>
+<%= csrf_meta_tags %>
+<% content_for(:head) do %>
+  <%= javascript_include_tag 'phaser.js' %>
+  <%= javascript_include_tag 'InputPhase.js' %>
+  <%= javascript_include_tag 'BattlePhase.js' %>
+<% end %>
+</head>
 
-</br>
+<div class="jumbotron" id="waiting-to-start">
+  <h1 class="display-3" align="center">Waiting for more players...</h1>
+  <hr class="m-y-2">
+  <p align="center">This game needs a few more players. While you wait, chat with players in other games below.</p>
+</div>
+<div class="jumbotron" id="waiting-for-moves">
+  <h1 class="display-3" align="center">Your moves have been entered!</h1>
+  <hr class="m-y-2">
+  <p align="center">Now we wait for other players to enter their moves.</p>
+</div>
+<div class="jumbotron" id="end-game">
+  <h1 class="display-3" align="center">That's all for now, folks!</h1>
+  <hr class="m-y-2">
+  <p align="center">Check out the chat for a summary of each game phase!</p>
+</div>
+<div class="container" id="input-phase-1">
+    <div class="row">
+        <div id="input-phase-canvas-1" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="battle-phase-1">
+    <div class="row">
+        <div id="battle-phase-canvas-1" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="input-phase-2">
+    <div class="row">
+        <div id="input-phase-canvas-2" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="battle-phase-2">
+    <div class="row">
+        <div id="battle-phase-canvas-2" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="input-phase-3">
+    <div class="row">
+        <div id="input-phase-canvas-3" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="battle-phase-3">
+    <div class="row">
+        <div id="battle-phase-canvas-3" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="input-phase-4">
+    <div class="row">
+        <div id="input-phase-canvas-4" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="battle-phase-4">
+    <div class="row">
+        <div id="battle-phase-canvas-4" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
 
 <div class="panel panel-primary">
   <div class="panel-heading"><b>Server Chat</b></div>
@@ -22,6 +90,27 @@
 <script src="https://js.pusher.com/3.1/pusher.min.js"></script>
 
 <script>
+    $( "#waiting-for-moves" ).hide()
+    $( "#waiting-for-moves" ).children().hide()
+    $( "#end-game" ).hide()
+    $( "#end-game" ).children().hide()
+    $( "#input-phase-1" ).hide()
+    $( "#input-phase-1" ).children().hide()
+    $( "#battle-phase-1" ).hide()
+    $( "#battle-phase-1" ).children().hide()
+    $( "#input-phase-2" ).hide()
+    $( "#input-phase-2" ).children().hide()
+    $( "#battle-phase-2" ).hide()
+    $( "#battle-phase-2" ).children().hide()
+    $( "#input-phase-3" ).hide()
+    $( "#input-phase-3" ).children().hide()
+    $( "#battle-phase-3" ).hide()
+    $( "#battle-phase-3" ).children().hide()
+    $( "#input-phase-4" ).hide()
+    $( "#input-phase-4" ).children().hide()
+    $( "#battle-phase-4" ).hide()
+    $( "#battle-phase-4" ).children().hide()
+    var phase = 1;
     Pusher.logToConsole = true;
     var pusher = new Pusher('db5516d4f7a81e681d0f', {
         encrypted: true
@@ -42,26 +131,31 @@
 
     game_channel.bind('promptForMoves', function(data){
         data=setCurrentPlayer(data);
+        $( "#waiting-to-start" ).children().hide();
+        $( "#waiting-to-start" ).hide();
+        input_phase_id="#input-phase-"+phase;
+        $(input_phase_id).show();
+        $(input_phase_id).children().show();
         logGameStarted();
-        data=getMoves(data);
-        // console.log(data)
-        sendMoves(getCurrentPlayer(data));
+        getMoves(data);
     });
 
     game_channel.bind('allMovesEntered', function(data){
         console.log('All Moves entered!');
-        // console.log(data);
+        console.log(data);
+        $('#waiting-for-moves').hide();
+        $('#waiting-for-moves').children().hide();
+        battle_phase_id="#battle-phase-"+phase;
+        $(battle_phase_id).children().show();
+        $(battle_phase_id).show();
         data=setCurrentPlayer(data);
-        results=animateGame(data);
-        current_player = getCurrentPlayer(data);
-        if(current_player.is_attacker){
-            sendResults(results);
-        }
+        animateGame(data);
     });
 
     game_channel.bind('gameComplete', function(data){
         // window.location.replace('/game/game_results/<%=@game.id%>');
         console.log("The game is complete!");
+        $( "#end-game" ).show();
         console.log(data);
         data=setCurrentPlayer(data);
         logResults(data);
@@ -76,19 +170,30 @@
 
 
     function getMoves(game_package){
-        for(var i = 0; i<4; i++){
-            if(game_package[i].is_current_player){
-                game_package[i].action_1_x=getRandomInt(0, 500);
-                game_package[i].action_1_y=getRandomInt(0, 500);
-                game_package[i].action_2_x=getRandomInt(0, 500);
-                game_package[i].action_2_y=getRandomInt(0, 500);
-                game_package[i].action_3_x=getRandomInt(0, 500);
-                game_package[i].action_3_y=getRandomInt(0, 500);
-                game_package[i].position_x=getRandomInt(0, 500);
-                game_package[i].position_y=getRandomInt(0, 500);
-            }
-        }
-        return game_package
+        // for(var i = 0; i<4; i++){
+        //     if(game_package[i].is_current_player){
+        //         game_package[i].action_1_x=getRandomInt(0, 500);
+        //         game_package[i].action_1_y=getRandomInt(0, 500);
+        //         game_package[i].action_2_x=getRandomInt(0, 500);
+        //         game_package[i].action_2_y=getRandomInt(0, 500);
+        //         game_package[i].action_3_x=getRandomInt(0, 500);
+        //         game_package[i].action_3_y=getRandomInt(0, 500);
+        //         game_package[i].position_x=getRandomInt(0, 500);
+        //         game_package[i].position_y=getRandomInt(0, 500);
+        //     }
+        // }
+        startInputPhase(game_package, phase);
+    }
+
+    function movesWereEntered(game_package){
+        console.log("Moves were entered");
+        console.log(game_package)
+        input_phase_id="#input-phase-"+phase;
+        $( input_phase_id ).children().hide();
+        $(input_phase_id).hide();
+        $('#waiting-for-moves').show();
+        $('#waiting-for-moves').children().show();
+        sendMoves(getCurrentPlayer(game_package));
     }
 
     function sendMoves(game_package){
@@ -101,12 +206,19 @@
     }
 
     function animateGame(game_package){
-        for(var i =0; i<4; i++ ){
-            if(!game_package[i].is_attacker){
-                game_package[i].is_alive=(getRandomInt(0,2)==1);
-            }
+        startBattlePhase(game_package, phase);
+    }
+
+    function gameAnimationComplete(game_package){
+        console.log("Animation Complete!");
+        current_player = getCurrentPlayer(game_package);
+        if(current_player.is_attacker){
+            sendResults(game_package);
         }
-        return game_package;
+        battle_phase_id="#battle-phase-"+phase;
+        $(battle_phase_id).children().hide();
+        $( battle_phase_id).hide();
+        phase=phase+1;
     }
 
     function sendResults(results){
