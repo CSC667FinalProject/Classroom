@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   match "/game/player_join" => "game#player_join", :via => :post
   post 'pusher/chat'
   post 'pusher/player_joined'
+  post 'pusher/submit_moves'
+  post 'pusher/submit_results'
   get 'home/index'
   devise_for :users
   devise_scope :user do

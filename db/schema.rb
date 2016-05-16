@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160515013353) do
+ActiveRecord::Schema.define(version: 20160515232108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,16 +22,17 @@ ActiveRecord::Schema.define(version: 20160515013353) do
   end
 
   create_table "games", force: :cascade do |t|
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-    t.integer  "phase"
-    t.boolean  "waiting_for_players"
-    t.boolean  "finished"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.integer  "phase",               default: 1,     null: false
+    t.boolean  "waiting_for_players", default: true,  null: false
+    t.boolean  "finished",            default: false, null: false
+    t.integer  "moves_submitted",     default: 0,     null: false
   end
 
   create_table "players", force: :cascade do |t|
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
     t.integer  "user_id"
     t.integer  "game_id"
     t.boolean  "is_attacker"
@@ -47,6 +48,7 @@ ActiveRecord::Schema.define(version: 20160515013353) do
     t.decimal  "action_3_x",        precision: 5
     t.decimal  "action_3_y",        precision: 5
     t.string   "username"
+    t.integer  "deaths",                          default: 0, null: false
   end
 
   add_index "players", ["game_id"], name: "index_players_on_game_id", using: :btree

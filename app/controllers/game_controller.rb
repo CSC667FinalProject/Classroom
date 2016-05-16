@@ -1,5 +1,5 @@
 class GameController < ApplicationController
-  helper_method :setInitialPostionAndAction
+  helper_method :setInitialPlayerData
   def index
     if not current_user or not params['id']
       redirect_to "/home/"
@@ -21,7 +21,7 @@ class GameController < ApplicationController
       @game.save
       num_players = @game.players.count
       @player.player_number=num_players
-      setInitialPostionAndAction(@player)
+      setInitialPlayerData(@player)
       if @game.players.count==4
         @game.waiting_for_players = false
         @game.save
@@ -35,10 +35,10 @@ class GameController < ApplicationController
     end
   end
 
-  def get_moves
+  def game_results
 
   end
-  def setInitialPostionAndAction(player)
+  def setInitialPlayerData(player)
     x = 0
     y = 0
     case player.player_number
@@ -63,6 +63,7 @@ class GameController < ApplicationController
     player.action_2_y = 0
     player.action_3_x = 0
     player.action_3_y = 0
+    player.is_current_player = false
     player.save
   end
 end
