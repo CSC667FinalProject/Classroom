@@ -1,40 +1,354 @@
+
 <head>
 <%= csrf_meta_tags %>
 <% content_for(:head) do %>
-  <%= javascript_include_tag 'test' %>
+  <%= javascript_include_tag 'phaser.js' %>
+  <%= javascript_include_tag 'InputPhase.js' %>
+  <%= javascript_include_tag 'BattlePhase.js' %>
 <% end %>
 </head>
 
-<div class="jumbotron">
-  <h1 class="display-3" align="center">Open Games</h1>
+<div class="jumbotron" id="waiting-to-start">
+  <h1 class="display-3" align="center">Waiting for more players...</h1>
   <hr class="m-y-2">
-  <p align="center">Join an open game below and get start throwing knives!</p>
+  <p align="center">This game needs a few more players. While you wait, chat with players in other games below.</p>
 </div>
-
-<% @open_games.each do |game| %>
-<div class="panel panel-primary">
-  <div class="panel-heading"><b>Game Number: <%=game.id%></b></div>
-  <div class="panel-body fixed-panel">
-    
-        <div class="row">
-            <div class="col-md-6">
-              <div class="btn-group">
-                <%= button_to('Join', "home#player_join", params: {:id=>game.id}, :class => 'btn btn-large btn-primary')%>
-              </div>
-            </div>
-        </div> 
-        <div class="row" align="center">
-            <div class="col-md-4">Seat 1:</div><div class="col-md-2">Name</div>
-        </div> 
-        <div class="row" align="center">
-            <div class="col-md-4">Seat 2:</div><div class="col-md-2">Name</div>
-        </div>
-        <div class="row" align="center">
-            <div class="col-md-4">Seat 3:</div><div class="col-md-2">OPEN</div>
-        </div>
-        <div class="row" align="center">
-            <div class="col-md-4">Seat 4:</div><div class="col-md-2">OPEN</div>
-        </div>
+<div class="jumbotron" id="waiting-for-moves">
+  <h1 class="display-3" align="center">Your moves have been entered!</h1>
+  <hr class="m-y-2">
+  <p align="center">Now we wait for other players to enter their moves.</p>
+</div>
+<div class="jumbotron" id="end-game">
+  <h1 class="display-3" align="center">That's all for now, folks!</h1>
+  <hr class="m-y-2">
+  <p align="center">Check out the chat for a summary of each game phase!</p>
+</div>
+<div class="container">
+        <p id="" class="col-md-12" align="center">
+        </p>
+</div>
+<div class="row" id="player-status-div">
+  <div class="col-md-offset-2 col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center" id="player-status">      
+      </div>
+     </div>
   </div>
 </div>
-<% end %>
+
+
+
+<div class="container" id="input-phase-1">
+    <div class="row">
+        <div id="input-phase-canvas-1" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="battle-phase-1">
+    <div class="row">
+        <div id="battle-phase-canvas-1" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="input-phase-2">
+    <div class="row">
+        <div id="input-phase-canvas-2" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="battle-phase-2">
+    <div class="row">
+        <div id="battle-phase-canvas-2" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="input-phase-3">
+    <div class="row">
+        <div id="input-phase-canvas-3" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="battle-phase-3">
+    <div class="row">
+        <div id="battle-phase-canvas-3" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="input-phase-4">
+    <div class="row">
+        <div id="input-phase-canvas-4" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+<div class="container" id="battle-phase-4">
+    <div class="row">
+        <div id="battle-phase-canvas-4" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
+        </div>
+    </div>
+</div>
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading"><b>Server Chat</b></div>
+  <div id="chat" class="panel-body fixed-panel"></div>
+  <div class="panel-footer">
+    <div class="input-group">
+      <input id="message_box" class="form-control"  placeholder="Enter your message">
+      <span class="input-group-btn">
+        <button id="send_button" class="btn btn-primary" onclick="sendMessage()">Send</button>
+      </span> 
+    </div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<script src="https://js.pusher.com/3.1/pusher.min.js"></script>
+
+<script>
+    $( "#waiting-for-moves" ).hide()
+    $( "#waiting-for-moves" ).children().hide()
+    $( "#end-game" ).hide()
+    $( "#end-game" ).children().hide()
+    $( "#input-phase-1" ).hide()
+    $( "#input-phase-1" ).children().hide()
+    $( "#battle-phase-1" ).hide()
+    $( "#battle-phase-1" ).children().hide()
+    $( "#input-phase-2" ).hide()
+    $( "#input-phase-2" ).children().hide()
+    $( "#battle-phase-2" ).hide()
+    $( "#battle-phase-2" ).children().hide()
+    $( "#input-phase-3" ).hide()
+    $( "#input-phase-3" ).children().hide()
+    $( "#battle-phase-3" ).hide()
+    $( "#battle-phase-3" ).children().hide()
+    $( "#input-phase-4" ).hide()
+    $( "#input-phase-4" ).children().hide()
+    $( "#battle-phase-4" ).hide()
+    $( "#battle-phase-4" ).children().hide()
+    $( "#player-status-div" ).hide();
+    $( "#player-status-div" ).children().hide();
+    var phase = 1;
+    Pusher.logToConsole = true;
+    var pusher = new Pusher('db5516d4f7a81e681d0f', {
+        encrypted: true
+    });
+
+    var chat_channel = pusher.subscribe('chat');
+    var game_channel = pusher.subscribe('<%=@game.id%>');
+    var initial_join_processed = false;
+    chat_channel.bind('sendMessage', function(data) {
+        $('#chat').append('<div class="chat-body"><div class="header"><strong class="primary-font">' + data.user_email + '</strong></div><p>' + data.message + '</p></div>');
+
+        scrollToBottom();
+    });
+
+    game_channel.bind('newPlayerJoined', function(data){
+        $('#chat').append('<div class="chat-body"><div class="header"><strong class="primary-font">' + data.user_email + '</strong></div><p>has joined the game.</p></div>');
+    });
+
+    game_channel.bind('promptForMoves', function(data){
+        data=setCurrentPlayer(data);
+        $( "#waiting-to-start" ).children().hide();
+        $( "#waiting-to-start" ).hide();
+        input_phase_id="#input-phase-"+phase;
+        $(input_phase_id).show();
+        $(input_phase_id).children().show();
+        logGameStarted();
+        setPlayerStatus(data);
+        getMoves(data);
+    });
+
+    game_channel.bind('allMovesEntered', function(data){
+        $( "#player-status-div" ).children().hide();
+        $('#player-status').text("");
+        $( "#player-status-div" ).hide();
+        console.log('All Moves entered!');
+        console.log(data);
+        $('#waiting-for-moves').hide();
+        $('#waiting-for-moves').children().hide();
+        battle_phase_id="#battle-phase-"+phase;
+        $(battle_phase_id).children().show();
+        $(battle_phase_id).show();
+        data=setCurrentPlayer(data);
+        animateGame(data);
+    });
+
+    game_channel.bind('gameComplete', function(data){
+        // window.location.replace('/game/game_results/<%=@game.id%>');
+        console.log("The game is complete!");
+        $( "#end-game" ).show();
+        console.log(data);
+        data=setCurrentPlayer(data);
+        logResults(data);
+    });
+
+    game_channel.bind('pusher:subscription_succeeded', function() {
+        if(!initial_join_processed){
+            initialJoin();
+            initial_join_processed = true;
+        }
+    });
+
+
+    function setPlayerStatus(game_package){
+        var current_player = getCurrentPlayer(game_package);
+        $( "#player-status-div" ).show();
+        $( "#player-status-div" ).children().show();
+        if(current_player.is_attacker){
+            $('#player-status').text("Select your attacks. You are player "+current_player.player_number+" and you are the attacker!");
+        }
+        else{
+            $('#player-status').text("Select your dodges. You are player "+current_player.player_number+" and you are defending!");
+        }
+    }
+
+    function getMoves(game_package){
+        // for(var i = 0; i<4; i++){
+        //     if(game_package[i].is_current_player){
+        //         game_package[i].action_1_x=getRandomInt(0, 500);
+        //         game_package[i].action_1_y=getRandomInt(0, 500);
+        //         game_package[i].action_2_x=getRandomInt(0, 500);
+        //         game_package[i].action_2_y=getRandomInt(0, 500);
+        //         game_package[i].action_3_x=getRandomInt(0, 500);
+        //         game_package[i].action_3_y=getRandomInt(0, 500);
+        //         game_package[i].position_x=getRandomInt(0, 500);
+        //         game_package[i].position_y=getRandomInt(0, 500);
+        //     }
+        // }
+        startInputPhase(game_package, phase);
+    }
+
+    function movesWereEntered(game_package){
+        console.log("Moves were entered");
+        console.log(game_package)
+        input_phase_id="#input-phase-"+phase;
+        $( input_phase_id ).children().hide();
+        $(input_phase_id).hide();
+        $('#waiting-for-moves').show();
+        $('#waiting-for-moves').children().show();
+        sendMoves(getCurrentPlayer(game_package));
+    }
+
+    function sendMoves(game_package){
+        $.ajax({
+        type: "POST",
+        url: "<%= pusher_submit_moves_path%>",
+        data: game_package,
+        success: logWaitingForMoves
+        });
+    }
+
+    function animateGame(game_package){
+        startBattlePhase(game_package, phase);
+    }
+
+    function gameAnimationComplete(game_package){
+        console.log("Animation Complete!");
+        current_player = getCurrentPlayer(game_package);
+        if(current_player.is_attacker){
+            sendResults(game_package);
+        }
+        battle_phase_id="#battle-phase-"+phase;
+        $(battle_phase_id).children().hide();
+        $( battle_phase_id).hide();
+        phase=phase+1;
+    }
+
+    function sendResults(results){
+        $.ajax({
+        type: "POST",
+        url: "<%= pusher_submit_results_path%>",
+        data: { game_data: JSON.stringify(results) }
+        });
+
+    }
+
+    function getCurrentPlayer(game_package){
+        for (var i = 0; i < game_package.length; i++) {
+            if (game_package[i].is_current_player){
+                return game_package[i];
+            }
+        }
+    }
+
+    function setCurrentPlayer(game_package){
+        for (var i = 0; i < game_package.length; i++) {
+            if (game_package[i].user_id == <%=current_user.id%>){
+                game_package[i].is_current_player=true;
+            }
+            else{
+                game_package[i].is_current_player=false;
+            }
+        }
+        return game_package;
+    }
+
+    function initialJoin(){
+        $.ajax({
+        type: "POST",
+        data: { id: <%=@game.id%>},
+        url: "<%= pusher_player_joined_path%>"
+        });
+    }
+
+    function logWaitingForMoves(){
+        $('#chat').append('<div class="chat-body"><div class="header"><strong class="primary-font"><p>Your moves were submitted. Waiting for other players to select their moves...</p></strong></div></div>');
+        scrollToBottom();
+    }
+
+    function logGameStarted(){
+        $('#chat').append('<div class="chat-body"><div class="header"><strong class="primary-font"><p>The game has started. Please select your moves!</p></strong></div></div>');
+        scrollToBottom();
+    }
+
+    function logResults(game_data){
+        player_results = new Array(4);
+        for(var i =0; i<4; i++){
+            player_results[i]='<p><strong class="primary-font">'+game_data[i]['username']+"</strong> Deaths: "+game_data[i].deaths;
+        }
+        $('#chat').append('<div class="chat-body"><div class="header"><strong class="primary-font"><p>The game has ended. Here are the results:</p></strong></div></div>');
+        for (var i =0; i<4; i++){
+            $('#chat').append('<div class="chat-body">'+player_results[i]+'</div>');
+        }
+        scrollToBottom();
+    }
+
+    function sendMessage() {
+        var message = document.getElementById("message_box").value;
+
+        var payload = {
+            user_email: "<%= current_user.email %>",
+            message: message
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "<%= pusher_chat_path %>",
+            data: payload,
+            success: clearMessageBox()
+        });
+    }
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // remove old text in message box
+    function clearMessageBox() {
+        document.getElementById("message_box").value = "";
+    }
+
+    // scroll to last message when received new message 
+    function scrollToBottom() {
+        var chat = document.getElementById("chat");
+        chat.scrollTop = chat.scrollHeight;
+    }
+    $( document ).ready(function() {
+        // trigger button click when user hits Enter key
+        $("#message_box").keyup(function(event){
+            if (event.keyCode == 13){
+                $("#send_button").click();
+            }
+        });
+    });
+</script>

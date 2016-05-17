@@ -23,6 +23,14 @@
   <hr class="m-y-2">
   <p align="center">Check out the chat for a summary of each game phase!</p>
 </div>
+
+<div class="container">
+    <div class="row">
+        <div id="player-status" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em; align:center">
+        </div>
+    </div>
+</div>
+
 <div class="container" id="input-phase-1">
     <div class="row">
         <div id="input-phase-canvas-1" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em;">
@@ -137,10 +145,12 @@
         $(input_phase_id).show();
         $(input_phase_id).children().show();
         logGameStarted();
+        setCurrentPlayer(data);
         getMoves(data);
     });
 
     game_channel.bind('allMovesEntered', function(data){
+        $(#'player-status').text("");
         console.log('All Moves entered!');
         console.log(data);
         $('#waiting-for-moves').hide();
@@ -168,6 +178,15 @@
         }
     });
 
+    function setPlayerStatus(game_package) {
+        var current_player = getCurrentPlayer(game_package);
+
+        if (current_player.is_attacker) {
+            $(#'player-status').text("Select Your Attacks You are Player " + current_player.player_number + " and you are attacking");
+        } else {
+            $(#'player-status').text("Select Your Dodges You are Player " + current_player.player_number + " and you are defending");
+        }
+    }
 
     function getMoves(game_package){
         // for(var i = 0; i<4; i++){
