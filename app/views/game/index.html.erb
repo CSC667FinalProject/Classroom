@@ -23,13 +23,20 @@
   <hr class="m-y-2">
   <p align="center">Check out the chat for a summary of each game phase!</p>
 </div>
-
 <div class="container">
-    <div class="row">
-        <div id="player-status" class="col-md-12" style="margin-left:4.25em; margin-bottom:1.5em; align:center">
-        </div>
-    </div>
+        <p id="" class="col-md-12" align="center">
+        </p>
 </div>
+<div class="row" id="player-status-div">
+  <div class="col-md-offset-2 col-md-8">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center" id="player-status">      
+      </div>
+     </div>
+  </div>
+</div>
+
+
 
 <div class="container" id="input-phase-1">
     <div class="row">
@@ -80,6 +87,7 @@
     </div>
 </div>
 
+
 <div class="panel panel-primary">
   <div class="panel-heading"><b>Server Chat</b></div>
   <div id="chat" class="panel-body fixed-panel"></div>
@@ -118,6 +126,8 @@
     $( "#input-phase-4" ).children().hide()
     $( "#battle-phase-4" ).hide()
     $( "#battle-phase-4" ).children().hide()
+    $( "#player-status-div" ).hide();
+    $( "#player-status-div" ).children().hide();
     var phase = 1;
     Pusher.logToConsole = true;
     var pusher = new Pusher('db5516d4f7a81e681d0f', {
@@ -145,12 +155,14 @@
         $(input_phase_id).show();
         $(input_phase_id).children().show();
         logGameStarted();
-        setCurrentPlayer(data);
+        setPlayerStatus(data);
         getMoves(data);
     });
 
     game_channel.bind('allMovesEntered', function(data){
-        $(#'player-status').text("");
+        $( "#player-status-div" ).children().hide();
+        $('#player-status').text("");
+        $( "#player-status-div" ).hide();
         console.log('All Moves entered!');
         console.log(data);
         $('#waiting-for-moves').hide();
@@ -178,13 +190,16 @@
         }
     });
 
-    function setPlayerStatus(game_package) {
-        var current_player = getCurrentPlayer(game_package);
 
-        if (current_player.is_attacker) {
-            $(#'player-status').text("Select Your Attacks You are Player " + current_player.player_number + " and you are attacking");
-        } else {
-            $(#'player-status').text("Select Your Dodges You are Player " + current_player.player_number + " and you are defending");
+    function setPlayerStatus(game_package){
+        var current_player = getCurrentPlayer(game_package);
+        $( "#player-status-div" ).show();
+        $( "#player-status-div" ).children().show();
+        if(current_player.is_attacker){
+            $('#player-status').text("Select your attacks. You are player "+current_player.player_number+" and you are the attacker!");
+        }
+        else{
+            $('#player-status').text("Select your dodges. You are player "+current_player.player_number+" and you are defending!");
         }
     }
 
